@@ -70,8 +70,9 @@ This directory will contain four `.csv` files with the summary data, which can b
 - scenario_3_scalability.csv
 - scenario_4_reconfiguration_cost.csv
 
-<div align="center">
-  ![A high-level overview of the ProShard simulation pipeline. After setup and dependency installation, the simulator runs multiple sharding protocols across four distinct blockchain workload scenarios.](https://github.com/ahmadpanah/ProShard/blob/211fcebe97322a24072baddb6c05b168c3a32cde/simulation_run.png)
-</div>
+
+  ![A high-level overview of the ProShard simulation pipeline. After setup and dependency installation, the simulator runs multiple sharding protocols across four distinct blockchain workload scenarios.](simulation_run.png
+)
+
 
 This implementation is based on the research paper: ProShard: Proactive Sharding for Scalable Blockchains via Semantic and Predictive On-Chain Analysis by Seyed Hossein Ahmadpanah and Meghdad Mirabi.
