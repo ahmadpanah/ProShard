@@ -70,14 +70,8 @@ This directory will contain four `.csv` files with the summary data, which can b
 - scenario_3_scalability.csv
 - scenario_4_reconfiguration_cost.csv
 
-## Understanding the Code
-
-- **config.py**: This file holds all the tunable parameters for the simulation. You can easily modify values like the number of accounts, epochs, spike size, or ProShard's internal weights to see how they affect the outcome.
-
-- **protocols.py**: This file contains the core logic for each of the sharding protocols. The ProShardProtocol class is where the proactive logic (semantic and predictive analysis) is implemented.
-
-- **simulator.py**: This is the main simulation engine. It manages the concept of epochs, generates workloads based on the configuration, processes transactions, and collects performance metrics.
-
-- **main.py**: This is the high-level orchestrator script. It initializes the simulation for each protocol, runs the four scenarios described in the paper, and handles printing and saving the final results.
+<div align="center">
+  ![A high-level overview of the ProShard simulation pipeline. After setup and dependency installation, the simulator runs multiple sharding protocols across four distinct blockchain workload scenarios.](https://via.placeholder.com/600x200.png?text=Centered+Image)
+</div>
 
 This implementation is based on the research paper: ProShard: Proactive Sharding for Scalable Blockchains via Semantic and Predictive On-Chain Analysis by Seyed Hossein Ahmadpanah and Meghdad Mirabi.
