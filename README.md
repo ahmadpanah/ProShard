@@ -22,7 +22,7 @@ The simulation framework evaluates ProShard's performance against several other 
 - **Data Export**: Saves the final results of each scenario into `.csv` files for easy analysis and plotting.
 
 ## Repository Structure
-
+```
 /
 ├── config.py                # All tunable parameters for the simulation
 ├── protocols.py             # Implementation of the sharding protocols
@@ -34,6 +34,7 @@ The simulation framework evaluates ProShard's performance against several other 
     ├── scenario_2_workload_spike.csv
     ├── scenario_3_scalability.csv
     └── scenario_4_reconfiguration_cost.csv
+```
 
 ## Prerequisites
 
