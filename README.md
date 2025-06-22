@@ -49,7 +49,9 @@ cd proshard-simulator
 
 ### 2. Install Dependencies
 The simulation requires the pandas and networkx libraries. Install them using pip:
+```
 pip install pandas networkx
+```
 
 ### 3. Run the Simulation
 Execute the main.py script from your terminal. It will automatically run all four scenarios. The simulation will take a few minutes to complete, depending on your system's performance.
