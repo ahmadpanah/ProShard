@@ -1,6 +1,8 @@
 # main.py
 
 import pandas as pd
+from collections import defaultdict
+import os  # Import the os module
 import config
 from simulator import Simulator
 from protocols import StaticProtocol, CLPAProtocol, DBSRPMLProtocol, ProShardProtocol
@@ -25,8 +27,14 @@ def run_scenario_1(protocols):
     
     config.SPIKE_EPOCH = original_spike_epoch # Restore config
     df_results = pd.DataFrame(results)
+    
     print("\n--- Results for Scenario 1 ---")
     print(df_results.to_string(index=False))
+    
+    # --- SAVE TO CSV ---
+    output_path = 'scenario_1_steady_state.csv'
+    df_results.to_csv(output_path, index=False)
+    print(f"\nResults for Scenario 1 saved to {output_path}")
 
 def run_scenario_2(protocols):
     """Reaction to a Sudden Workload Spike (Epoch 50)"""
@@ -45,8 +53,14 @@ def run_scenario_2(protocols):
         })
     
     df_results = pd.DataFrame(results)
+    
     print("\n--- Results for Scenario 2 ---")
     print(df_results.to_string(index=False))
+
+    # --- SAVE TO CSV ---
+    output_path = 'scenario_2_workload_spike.csv'
+    df_results.to_csv(output_path, index=False)
+    print(f"\nResults for Scenario 2 saved to {output_path}")
     
 def run_scenario_3(protocols):
     """Scalability with Increasing Number of Shards"""
@@ -60,12 +74,18 @@ def run_scenario_3(protocols):
             sim = Simulator(proto_class(num_shards=s, num_accounts=config.NUM_ACCOUNTS))
             df = sim.run()
             # Use max throughput as the metric
-            results_dict[sim.protocol.name].append(df['throughput'].max())
+            results_dict[sim.protocol.name].append(int(df['throughput'].max())) # Cast to int for cleaner CSV
 
     df_results = pd.DataFrame(results_dict, index=[f"S={s}" for s in shard_counts]).T
     df_results.index.name = "Protocol"
+    
     print("\n--- Results for Scenario 3 (Max System Throughput - TPS) ---")
     print(df_results)
+
+    # --- SAVE TO CSV ---
+    output_path = 'scenario_3_scalability.csv'
+    df_results.to_csv(output_path) # index=True is good here because Protocol is the index
+    print(f"\nResults for Scenario 3 saved to {output_path}")
 
 def run_scenario_4(protocols):
     """Reconfiguration Cost and Stability"""
@@ -82,10 +102,22 @@ def run_scenario_4(protocols):
         })
     
     df_results = pd.DataFrame(results)
+
     print("\n--- Results for Scenario 4 ---")
     print(df_results.to_string(index=False))
+    
+    # --- SAVE TO CSV ---
+    output_path = 'scenario_4_reconfiguration_cost.csv'
+    df_results.to_csv(output_path, index=False)
+    print(f"\nResults for Scenario 4 saved to {output_path}")
+
 
 if __name__ == "__main__":
+    # --- Create a directory for results if it doesn't exist ---
+    if not os.path.exists('simulation_results'):
+        os.makedirs('simulation_results')
+    os.chdir('simulation_results') # Change into the directory
+
     # The list of protocols to be evaluated
     protocol_classes = [
         StaticProtocol,
@@ -106,3 +138,5 @@ if __name__ == "__main__":
     run_scenario_2(protocol_classes)
     run_scenario_3(protocol_classes)
     run_scenario_4(protocol_classes)
+
+    print("\nAll simulations complete. CSV results are in the 'simulation_results' directory.")

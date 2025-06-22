@@ -21,6 +21,10 @@ class ShardingProtocol(ABC):
     def _create_partition_from_communities(self, communities):
         """Helper to convert networkx community list to a partition map."""
         partition = {}
+        # Ensure all accounts are assigned, even if community detection misses some
+        for acc_id in range(self.num_accounts):
+            partition[acc_id] = acc_id % self.num_shards
+        
         for shard_id, community in enumerate(communities):
             for account in community:
                 partition[account] = shard_id
@@ -82,8 +86,9 @@ class DBSRPMLProtocol(ReactiveProtocol):
         if not G.nodes:
             return current_partition
         
-        # Greedy modularity is a good proxy for advanced graph partitioning
-        communities = nx.community.greedy_modularity_communities(G, n_communities=self.num_shards)
+        # --- FIX IS HERE ---
+        # Changed n_communities to best_n
+        communities = nx.community.greedy_modularity_communities(G, best_n=self.num_shards)
         return self._create_partition_from_communities(communities)
 
 
@@ -155,8 +160,8 @@ class ProShardProtocol(ShardingProtocol):
             max_h = max(historical_weights.values()) if historical_weights else 1
             max_p = max(self.predicted_activity.values())**2 if self.predicted_activity else 1
             
-            norm_h = h_score / max_h
-            norm_p = p_score / max_p
+            norm_h = h_score / max_h if max_h > 0 else 0
+            norm_p = p_score / max_p if max_p > 0 else 0
             
             # Calculate final PAG edge weight
             weight = (config.PAG_WEIGHTS['historical'] * norm_h +
@@ -179,5 +184,5 @@ class ProShardProtocol(ShardingProtocol):
             return current_partition
             
         # 3. Partition the PAG
-        communities = nx.community.greedy_modularity_communities(G, n_communities=self.num_shards, weight='weight')
+        communities = nx.community.greedy_modularity_communities(G, best_n=self.num_shards, weight='weight')
         return self._create_partition_from_communities(communities)
